@@ -1,0 +1,18 @@
+.numpad-btn {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(212, 229, 233, 0.644);
+    border-radius: 3px;
+    cursor: pointer;
+    color: darkslategrey;
+}
+
+.numpad-btn:hover {
+    background-color: rgb(99, 174, 243);
+    color: whitesmoke;
+}
+
+.numpad-btn span {
+    margin: auto;
+    font-size: 24px;
+}
