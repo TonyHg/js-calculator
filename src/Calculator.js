@@ -129,6 +129,20 @@ export default class Calculator extends React.Component {
         });
     }
 
+    handleBackspace(_) {
+        var {formula, currentNumber, evaluating} = this.state;
+        if (currentNumber === ZERO || evaluating)
+            return;
+        
+        if (currentNumber.length === 1)
+            currentNumber = "00"
+
+        this.setState({
+            formula: formula.slice(0, -1),
+            currentNumber: currentNumber.slice(0, -1)
+        });
+    }
+
     }
 
     render() {
