@@ -13,7 +13,7 @@ export default class NumPad extends React.Component {
           onClick={this.props.handleClear}
         />
         <Button symbol={C} onClick={this.props.handleClear} />
-        <Button symbol="<=" onClick={this.props.handleBackspace} />
+        <Button symbol="%" onClick={this.props.handleOperator} />
         <Button symbol="/" onClick={this.props.handleOperator} />
 
         <Button symbol="7" onClick={this.props.handleDigit} />
@@ -31,9 +31,9 @@ export default class NumPad extends React.Component {
         <Button symbol="3" onClick={this.props.handleDigit} />
         <Button symbol="+" onClick={this.props.handleOperator} />
 
-        <Button symbol="%" onClick={this.props.handleOperator} />
-        <Button symbol="0" onClick={this.props.handleDigit} />
         <Button symbol="." onClick={this.props.handleDecimal} />
+        <Button symbol="0" onClick={this.props.handleDigit} />
+        <Button symbol="⌫" onClick={this.props.handleBackspace} />
         <Button
           id="button-result"
           symbol="="
