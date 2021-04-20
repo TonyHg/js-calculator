@@ -23,11 +23,16 @@ const initState = {
 export default class Calculator extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            formula: "",
-            currentNumber: "0",
+        this.state = initState;
 
-        };
+        this.handleDigit = this.handleDigit.bind(this);
+        this.handleOperator = this.handleOperator.bind(this);
+        this.handleClear = this.handleClear.bind(this);
+        this.handleDecimal = this.handleDecimal.bind(this);
+        this.handleBackspace = this.handleBackspace.bind(this);
+        this.handleEvaluation = this.handleEvaluation.bind(this);
+        this.stopEvaluationAndReset = this.stopEvaluationAndReset.bind(this);
+    }
 
     stopEvaluationAndReset() {
         this.handleClear(AC);
@@ -143,13 +148,37 @@ export default class Calculator extends React.Component {
         });
     }
 
+    handleEvaluation(_) {
+        const {formula, currentNumber, evaluating} = this.state;
+        if (evaluating === true)
+            return;
+        
+        if (formula.length === 0)
+            return;
+
+        var expression = formula;
+        while (expression && this.isOperator(expression.charAt(expression.length - 1)))
+            expression = expression.slice(0, -1);
+
+        console.log(expression);
+        var res = eval(expression);
+        this.setState({
+            formula: formula + EQUAL +  res,
+            currentNumber: res,
+            evaluating: true
+        });
     }
 
     render() {
         return (
             <div className="calculator">
                 <Screen formula={this.state.formula} currentNumber={this.state.currentNumber}/>
-                <NumPad />
+                <NumPad handleDigit={this.handleDigit}
+                        handleOperator={this.handleOperator}
+                        handleClear={this.handleClear}
+                        handleDecimal={this.handleDecimal}
+                        handleBackspace={this.handleBackspace}
+                        handleEvaluation={this.handleEvaluation} />
             </div>
         );
     }
