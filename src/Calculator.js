@@ -104,6 +104,31 @@ export default class Calculator extends React.Component {
         }
     }
 
+    handleDecimal(_) {
+        var {formula, currentNumber, evaluating} = this.state;
+        if (evaluating) {
+            this.stopEvaluationAndReset();
+
+            // FIXME
+            formula = initState.formula;
+            currentNumber = initState.currentNumber;
+        }
+
+        if (currentNumber.length >= MAXDIGITS)
+            return;
+        
+        if (currentNumber.includes(DECIMAL))
+            return;
+
+        if (currentNumber === ZERO)
+            formula = formula + ZERO;
+        
+        this.setState({
+            formula: formula + DECIMAL,
+            currentNumber: currentNumber + DECIMAL
+        });
+    }
+
     }
 
     render() {
