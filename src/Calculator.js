@@ -1,185 +1,186 @@
-import React from 'react'
-import './Calculator.css'
-import Screen from './Screen'
-import NumPad from './NumPad'
+import React from "react";
+import "./Calculator.css";
+import Screen from "./Screen";
+import NumPad from "./NumPad";
 
 const MAXDIGITS = 13;
-export const AC="AC", 
-            C="C",
-            ZERO="0",
-            PLUS="+",
-            MINUS="-",
-            TIMES="*",
-            DIVIDE="/",
-            MODULO="%",
-            DECIMAL=".",
-            EQUAL="=";
+export const AC = "AC",
+  C = "C",
+  ZERO = "0",
+  PLUS = "+",
+  MINUS = "-",
+  TIMES = "*",
+  DIVIDE = "/",
+  MODULO = "%",
+  DECIMAL = ".",
+  EQUAL = "=";
 const initState = {
-    formula: "",
-    currentNumber: ZERO,
-    evaluating: false
-}
+  formula: "",
+  currentNumber: ZERO,
+  evaluating: false,
+};
 
 export default class Calculator extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = initState;
+  constructor(props) {
+    super(props);
+    this.state = initState;
 
-        this.handleDigit = this.handleDigit.bind(this);
-        this.handleOperator = this.handleOperator.bind(this);
-        this.handleClear = this.handleClear.bind(this);
-        this.handleDecimal = this.handleDecimal.bind(this);
-        this.handleBackspace = this.handleBackspace.bind(this);
-        this.handleEvaluation = this.handleEvaluation.bind(this);
-        this.stopEvaluationAndReset = this.stopEvaluationAndReset.bind(this);
+    this.handleDigit = this.handleDigit.bind(this);
+    this.handleOperator = this.handleOperator.bind(this);
+    this.handleClear = this.handleClear.bind(this);
+    this.handleDecimal = this.handleDecimal.bind(this);
+    this.handleBackspace = this.handleBackspace.bind(this);
+    this.handleEvaluation = this.handleEvaluation.bind(this);
+    this.stopEvaluationAndReset = this.stopEvaluationAndReset.bind(this);
+  }
+
+  stopEvaluationAndReset() {
+    this.handleClear(AC);
+  }
+
+  handleDigit(digit) {
+    var { formula, currentNumber, evaluating } = this.state;
+    if (evaluating) {
+      this.stopEvaluationAndReset();
+
+      // FIXME
+      formula = initState.formula;
+      currentNumber = initState.currentNumber;
     }
 
-    stopEvaluationAndReset() {
-        this.handleClear(AC);
+    if (currentNumber.length >= MAXDIGITS) return;
+
+    if (currentNumber === ZERO && digit === ZERO) return;
+
+    this.setState({
+      formula: formula + digit,
+      currentNumber: currentNumber === ZERO ? digit : currentNumber + digit,
+      evaluating: false,
+    });
+  }
+
+  isOperator(c) {
+    return (
+      c === PLUS || c === MINUS || c === TIMES || c === DIVIDE || c === MODULO
+    );
+  }
+
+  handleOperator(operator) {
+    var { formula, currentNumber, evaluating } = this.state;
+    if (evaluating) {
+      this.stopEvaluationAndReset();
+
+      // FIXME
+      formula = initState.formula;
+      currentNumber = initState.currentNumber;
     }
 
-    handleDigit(digit) {
-        var {formula, currentNumber, evaluating} = this.state;
-        if (evaluating) {
-            this.stopEvaluationAndReset();
+    const formulaLength = formula.length;
 
-            // FIXME
-            formula = initState.formula;
-            currentNumber = initState.currentNumber;
-        }
+    if (formulaLength === 0) formula = ZERO;
 
-    
-        if (currentNumber.length >= MAXDIGITS)
-            return;
-        
-        if (currentNumber === ZERO && digit === ZERO)
-            return;
+    if (this.isOperator(formula.charAt(formulaLength - 1)))
+      formula = formula.slice(0, -1);
 
+    this.setState({
+      formula: formula + operator,
+      currentNumber: ZERO,
+      evaluating: false,
+    });
+  }
+
+  handleClear(symbol) {
+    switch (symbol) {
+      case AC:
+        this.setState(initState);
+        break;
+      case C:
+        const { formula, currentNumber, evaluating } = this.state;
+        if (currentNumber === ZERO || evaluating) break;
+        const currentNumberLength = currentNumber.length;
         this.setState({
-            formula: formula + digit,
-            currentNumber: currentNumber === ZERO ? digit : currentNumber + digit,
-            evaluating: false
+          formula: formula.slice(0, -currentNumberLength),
+          currentNumber: ZERO,
         });
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleDecimal(_) {
+    var { formula, currentNumber, evaluating } = this.state;
+    if (evaluating) {
+      this.stopEvaluationAndReset();
+
+      // FIXME
+      formula = initState.formula;
+      currentNumber = initState.currentNumber;
     }
 
-    isOperator(c) {
-        return c == PLUS || c == MINUS || c == TIMES || c == DIVIDE || c == MODULO;
-    }
+    if (currentNumber.length >= MAXDIGITS) return;
 
-    handleOperator(operator) {
-        var {formula, currentNumber, evaluating} = this.state;
-        if (evaluating) {
-            this.stopEvaluationAndReset();
+    if (currentNumber.includes(DECIMAL)) return;
 
-            // FIXME
-            formula = initState.formula;
-            currentNumber = initState.currentNumber;
-        }
+    if (currentNumber === ZERO) formula = formula + ZERO;
 
-        const formulaLength = formula.length;
+    this.setState({
+      formula: formula + DECIMAL,
+      currentNumber: currentNumber + DECIMAL,
+    });
+  }
 
-        if (formulaLength === 0)
-            formula = ZERO;
+  handleBackspace(_) {
+    var { formula, currentNumber, evaluating } = this.state;
+    if (currentNumber === ZERO || evaluating) return;
 
-        if (this.isOperator(formula.charAt(formulaLength - 1)))
-            formula = formula.slice(0, -1);
+    if (currentNumber.length === 1) currentNumber = "00";
 
-        this.setState({
-            formula: formula + operator,
-            currentNumber: ZERO,
-            evaluating: false
-        });
-    }
+    this.setState({
+      formula: formula.slice(0, -1),
+      currentNumber: currentNumber.slice(0, -1),
+    });
+  }
 
-    handleClear(symbol) {
-        switch (symbol) {
-            case AC:
-                this.setState(initState);
-                break;
-            case C:
-                const {formula, currentNumber, evaluating} = this.state;
-                if (currentNumber === ZERO || evaluating)
-                    break;
-                const currentNumberLength = currentNumber.length;
-                this.setState({
-                    formula: formula.slice(0, -currentNumberLength),
-                    currentNumber: ZERO
-                })
-                break;
-        }
-    }
+  handleEvaluation(_) {
+    const { formula, currentNumber, evaluating } = this.state;
+    if (evaluating === true) return;
 
-    handleDecimal(_) {
-        var {formula, currentNumber, evaluating} = this.state;
-        if (evaluating) {
-            this.stopEvaluationAndReset();
+    if (formula.length === 0) return;
 
-            // FIXME
-            formula = initState.formula;
-            currentNumber = initState.currentNumber;
-        }
+    var expression = formula;
+    while (
+      expression &&
+      this.isOperator(expression.charAt(expression.length - 1))
+    )
+      expression = expression.slice(0, -1);
 
-        if (currentNumber.length >= MAXDIGITS)
-            return;
-        
-        if (currentNumber.includes(DECIMAL))
-            return;
+    // TODO: use SafeEval
+    var res = eval(expression);
 
-        if (currentNumber === ZERO)
-            formula = formula + ZERO;
-        
-        this.setState({
-            formula: formula + DECIMAL,
-            currentNumber: currentNumber + DECIMAL
-        });
-    }
+    this.setState({
+      formula: formula + EQUAL + res,
+      currentNumber: res,
+      evaluating: true,
+    });
+  }
 
-    handleBackspace(_) {
-        var {formula, currentNumber, evaluating} = this.state;
-        if (currentNumber === ZERO || evaluating)
-            return;
-        
-        if (currentNumber.length === 1)
-            currentNumber = "00"
-
-        this.setState({
-            formula: formula.slice(0, -1),
-            currentNumber: currentNumber.slice(0, -1)
-        });
-    }
-
-    handleEvaluation(_) {
-        const {formula, currentNumber, evaluating} = this.state;
-        if (evaluating === true)
-            return;
-        
-        if (formula.length === 0)
-            return;
-
-        var expression = formula;
-        while (expression && this.isOperator(expression.charAt(expression.length - 1)))
-            expression = expression.slice(0, -1);
-
-        console.log(expression);
-        var res = eval(expression);
-        this.setState({
-            formula: formula + EQUAL +  res,
-            currentNumber: res,
-            evaluating: true
-        });
-    }
-
-    render() {
-        return (
-            <div className="calculator">
-                <Screen formula={this.state.formula} currentNumber={this.state.currentNumber}/>
-                <NumPad handleDigit={this.handleDigit}
-                        handleOperator={this.handleOperator}
-                        handleClear={this.handleClear}
-                        handleDecimal={this.handleDecimal}
-                        handleBackspace={this.handleBackspace}
-                        handleEvaluation={this.handleEvaluation} />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className="calculator">
+        <Screen
+          formula={this.state.formula}
+          currentNumber={this.state.currentNumber}
+        />
+        <NumPad
+          handleDigit={this.handleDigit}
+          handleOperator={this.handleOperator}
+          handleClear={this.handleClear}
+          handleDecimal={this.handleDecimal}
+          handleBackspace={this.handleBackspace}
+          handleEvaluation={this.handleEvaluation}
+        />
+      </div>
+    );
+  }
 }
