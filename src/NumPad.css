@@ -11,6 +11,14 @@
     background-color: rgb(224, 55, 55);
     color: whitesmoke;
 }
+  #button-delete:hover {
+    background: rgb(224, 55, 55) radial-gradient(circle, transparent 1%, rgb(224, 55, 55) 1%) center/15000%;
+  }
+  #button-delete:active {
+    background-color: rgb(247, 84, 84);
+    background-size: 100%;
+    transition: background 0s;
+  }
 
 #button-result {
     background-color: rgb(99, 174, 243);
