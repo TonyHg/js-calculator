@@ -28,6 +28,35 @@ export default class Calculator extends React.Component {
             currentNumber: "0",
 
         };
+
+    stopEvaluationAndReset() {
+        this.handleClear(AC);
+    }
+
+    handleDigit(digit) {
+        var {formula, currentNumber, evaluating} = this.state;
+        if (evaluating) {
+            this.stopEvaluationAndReset();
+
+            // FIXME
+            formula = initState.formula;
+            currentNumber = initState.currentNumber;
+        }
+
+    
+        if (currentNumber.length >= MAXDIGITS)
+            return;
+        
+        if (currentNumber === ZERO && digit === ZERO)
+            return;
+
+        this.setState({
+            formula: formula + digit,
+            currentNumber: currentNumber === ZERO ? digit : currentNumber + digit,
+            evaluating: false
+        });
+    }
+
     }
 
     render() {
