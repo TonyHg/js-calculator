@@ -86,6 +86,24 @@ export default class Calculator extends React.Component {
         });
     }
 
+    handleClear(symbol) {
+        switch (symbol) {
+            case AC:
+                this.setState(initState);
+                break;
+            case C:
+                const {formula, currentNumber, evaluating} = this.state;
+                if (currentNumber === ZERO || evaluating)
+                    break;
+                const currentNumberLength = currentNumber.length;
+                this.setState({
+                    formula: formula.slice(0, -currentNumberLength),
+                    currentNumber: ZERO
+                })
+                break;
+        }
+    }
+
     }
 
     render() {
