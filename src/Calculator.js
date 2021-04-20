@@ -57,6 +57,35 @@ export default class Calculator extends React.Component {
         });
     }
 
+    isOperator(c) {
+        return c == PLUS || c == MINUS || c == TIMES || c == DIVIDE || c == MODULO;
+    }
+
+    handleOperator(operator) {
+        var {formula, currentNumber, evaluating} = this.state;
+        if (evaluating) {
+            this.stopEvaluationAndReset();
+
+            // FIXME
+            formula = initState.formula;
+            currentNumber = initState.currentNumber;
+        }
+
+        const formulaLength = formula.length;
+
+        if (formulaLength === 0)
+            formula = ZERO;
+
+        if (this.isOperator(formula.charAt(formulaLength - 1)))
+            formula = formula.slice(0, -1);
+
+        this.setState({
+            formula: formula + operator,
+            currentNumber: ZERO,
+            evaluating: false
+        });
+    }
+
     }
 
     render() {
