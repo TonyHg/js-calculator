@@ -1,6 +1,10 @@
-# js-calculator
+# [js-calculator](https://tonyhg.github.io/js-calculator/)
 
 ![js-calculator](/overview.png)
+
+Access to the calculator via: https://tonyhg.github.io/js-calculator/
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
