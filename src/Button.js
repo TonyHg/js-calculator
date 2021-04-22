@@ -3,7 +3,7 @@ import "./Button.css";
 
 export default function Button({ id, symbol, onClick }) {
   return (
-    <div className="numpad-btn ripple" onClick={() => onClick(symbol)} id={id}>
+    <div className="numpad-btn ripple noselect" onClick={() => onClick(symbol)} id={id}>
       <span>{symbol}</span>
     </div>
   );
