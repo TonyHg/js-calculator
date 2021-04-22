@@ -13,7 +13,9 @@ export const AC = "AC",
   DIVIDE = "/",
   MODULO = "%",
   DECIMAL = ".",
-  EQUAL = "=";
+  EQUAL = "=",
+  MAXDIGITS_MESSAGE = "ERR MAX NUM",
+  DIV_BY_ZERO = "DIV BY ZERO";
 const initState = {
   formula: "",
   currentNumber: ZERO,
@@ -119,9 +121,7 @@ export default class Calculator extends React.Component {
     }
 
     if (currentNumber.length >= MAXDIGITS) return;
-
     if (currentNumber.includes(DECIMAL)) return;
-
     if (currentNumber === ZERO) formula = formula + ZERO;
 
     this.setState({
@@ -158,6 +158,8 @@ export default class Calculator extends React.Component {
     // TODO: use SafeEval
     var res = eval(expression);
 
+    if (res === Infinity) res = DIV_BY_ZERO;
+    else if (res.toString().length >= MAXDIGITS) res = MAXDIGITS_MESSAGE;
     this.setState({
       formula: formula + EQUAL + res,
       currentNumber: res,
