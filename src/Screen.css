@@ -10,6 +10,7 @@
 #formula {
     min-height: 20px;
     color: lightgray;
+    word-wrap: break-word;
 }
 
 #current-number {
